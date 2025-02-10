@@ -6,7 +6,9 @@ const app = express();
 const server = http.createServer(app); // Khởi tạo HTTP Server (WebSocket hoạt động trên một HTTP server, do đó cần truyền server vào WebSocket.)
 const wss = new WebSocket.Server({ server }); // Khởi tạo WebSocket Server
 app.use(express.static("public")); // phục vụ file HTML client
-
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index_01.html");
+});
 // Sự kiện khi có client kết nối
 wss.on("connection", (ws) => {
   console.log("Một client đã kết nối");
