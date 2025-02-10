@@ -17,6 +17,9 @@
     </select>
     <button onclick="joinRoom()">Vào phòng</button>
 
+    <h3>Người đang online:</h3>
+    <ul id="online-users"></ul>
+
     <div id="chatbox"></div>
     <input type="text" id="message" placeholder="Nhập tin nhắn..." disabled />
     <button onclick="sendMessage()" disabled>Gửi</button>
@@ -48,6 +51,7 @@
         ws.onmessage = (event) => {
           const data = JSON.parse(event.data);
           const chatbox = document.getElementById("chatbox");
+          const onlineUsersList = document.getElementById("online-users");
 
           if (data.type === "history") {
             chatbox.innerHTML = "";
@@ -56,6 +60,10 @@
             });
           } else if (data.type === "message") {
             chatbox.innerHTML += `<p><b>${data.username}:</b> ${data.message}</p>`;
+          } else if (data.type === "usersOnline") {
+            onlineUsersList.innerHTML = data.users
+              .map((user) => `<li>${user}</li>`)
+              .join("");
           }
         };
       }
