@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Chat</title>
+  </head>
+  <body>
+    <h2>Chat với WebSocket</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="message" placeholder="Nhập tin nhắn..." />
+    <button onclick="sendMessage()">Gửi</button>
+
+    <script>
+      // Kết nối tới WebSocket Server
+      const ws = new WebSocket("ws://localhost:3000");
+
+      // Xử lý khi kết nối thành công
+      ws.onopen = () => {
+        console.log("Đã kết nối đến WebSocket server");
+      };
+
+      // Nhận tin nhắn từ server
+      ws.onmessage = (event) => {
+        const chatbox = document.getElementById("chatbox");
+        const msg = document.createElement("p");
+        msg.textContent = event.data;
+        chatbox.appendChild(msg);
+      };
+
+      // Gửi tin nhắn lên server
+      function sendMessage() {
+        const messageInput = document.getElementById("message");
+        const message = messageInput.value;
+        ws.send(message); // Gửi tin nhắn đến server
+        messageInput.value = "";
+      }
+    </script>
+  </body>
+</html>
