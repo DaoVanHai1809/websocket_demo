@@ -56,10 +56,18 @@
           if (data.type === "history") {
             chatbox.innerHTML = "";
             data.messages.forEach((msg) => {
-              chatbox.innerHTML += `<p><b>${msg.username}:</b> ${msg.message}</p>`;
+              chatbox.innerHTML += formatMessage(
+                msg.username,
+                msg.message,
+                msg.timestamp
+              );
             });
           } else if (data.type === "message") {
-            chatbox.innerHTML += `<p><b>${data.username}:</b> ${data.message}</p>`;
+            chatbox.innerHTML += formatMessage(
+              data.username,
+              data.message,
+              data.timestamp
+            );
           } else if (data.type === "usersOnline") {
             onlineUsersList.innerHTML = data.users
               .map((user) => `<li>${user}</li>`)
@@ -83,6 +91,12 @@
           );
           messageInput.value = "";
         }
+      }
+
+      // Hàm định dạng thời gian hiển thị
+      function formatMessage(username, message, timestamp) {
+        const timeString = new Date(timestamp).toLocaleTimeString();
+        return `<p><b>${username}</b> [<i>${timeString}</i>]: ${message}</p>`;
       }
     </script>
   </body>

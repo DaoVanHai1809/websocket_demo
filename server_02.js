@@ -48,13 +48,25 @@ wss.on("connection", (ws) => {
       ws.send(JSON.stringify({ type: "history", messages: oldMessages }));
     } else if (type === "message" && currentRoom) {
       // Lưu tin nhắn vào MongoDB
-      const newMessage = new Message({ room, username, message });
+      const newMessage = new Message({
+        room,
+        username,
+        message,
+        timestamp: new Date(),
+      });
       await newMessage.save();
 
       // Gửi tin nhắn đến tất cả người dùng trong phòng
       rooms[currentRoom].forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ type: "message", username, message }));
+          client.send(
+            JSON.stringify({
+              type: "message",
+              username,
+              message,
+              timestamp: newMessage.timestamp,
+            })
+          );
         }
       });
     }
